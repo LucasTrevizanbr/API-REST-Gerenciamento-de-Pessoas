@@ -29,10 +29,7 @@ public class PessoaService {
     public MensagemResposta criarPessoa(PessoaDto pessoaDto){
         Pessoa pessoaParaSalvar = pessoaMapper.toModel(pessoaDto);
         Pessoa pessoaSalva = pessoaRepository.save(pessoaParaSalvar);
-        return MensagemResposta
-                .builder()
-                .mensagem("Pessoa criada com o id: "+ pessoaSalva.getId())
-                .build();
+        return criarMensagemResposta(pessoaSalva.getId(),"Criada pessoa com id: ");
     }
 
     public List<PessoaDto> listarTodos() {
@@ -42,10 +39,7 @@ public class PessoaService {
                 .collect(Collectors.toList());
     }
 
-    private Pessoa verificarSeExiste(Long id) throws PessoaNotFoundException {
-        return pessoaRepository.findById(id)
-                .orElseThrow(() -> new PessoaNotFoundException(id));
-    }
+
 
     public PessoaDto acharPorID(Long id) throws PessoaNotFoundException {
         Pessoa pessoa = verificarSeExiste(id);
@@ -58,4 +52,23 @@ public class PessoaService {
     }
 
 
+    public MensagemResposta atualizarPorId(Long id, PessoaDto pessoaDto) throws PessoaNotFoundException {
+        verificarSeExiste(id);
+        Pessoa pessoaParaAtualizar = pessoaMapper.toModel(pessoaDto);
+        Pessoa pessoaAtualizada = pessoaRepository.save(pessoaParaAtualizar);
+        return criarMensagemResposta(pessoaAtualizada.getId(),"Atualizada pessoa com id: ");
+
+    }
+
+    private Pessoa verificarSeExiste(Long id) throws PessoaNotFoundException {
+        return pessoaRepository.findById(id)
+                .orElseThrow(() -> new PessoaNotFoundException(id));
+    }
+
+    private MensagemResposta criarMensagemResposta(Long id, String mensagem) {
+        return MensagemResposta
+                .builder()
+                .mensagem(mensagem + id )
+                .build();
+    }
 }
