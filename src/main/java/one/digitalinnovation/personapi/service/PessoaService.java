@@ -42,10 +42,20 @@ public class PessoaService {
                 .collect(Collectors.toList());
     }
 
+    private Pessoa verificarSeExiste(Long id) throws PessoaNotFoundException {
+        return pessoaRepository.findById(id)
+                .orElseThrow(() -> new PessoaNotFoundException(id));
+    }
 
     public PessoaDto acharPorID(Long id) throws PessoaNotFoundException {
-        Pessoa pessoa = pessoaRepository.findById(id)
-                .orElseThrow(()->new PessoaNotFoundException(id));
+        Pessoa pessoa = verificarSeExiste(id);
         return pessoaMapper.toDTO(pessoa);
     }
+
+    public void deletarPorId(Long id) throws PessoaNotFoundException {
+        Pessoa pessoa = verificarSeExiste(id);
+        pessoaRepository.deleteById(id);
+    }
+
+
 }
