@@ -11,6 +11,7 @@ public interface PessoaMapper {
 
     PessoaMapper INSTANCE = Mappers.getMapper(PessoaMapper.class);
 
+    @Mapping(target = "dataNasc", source = "dataNasc", dateFormat = "dd-MM-yyyy")
     Pessoa toModel(PessoaDto pessoaDto);
 
     PessoaDto toDTO(Pessoa pessoa);
